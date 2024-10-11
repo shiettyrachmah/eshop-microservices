@@ -6,3 +6,7 @@ global using Catalog.API.Models;
 global using Marten;
 global using Catalog.API.Exception;
 global using FluentValidation;
+global using Marten.Pagination;
+global using BuildingBlocks.Behaviors;
+global using BuildingBlocks.Exceptions.Hnadler;
+global using Catalog.API.Data;
