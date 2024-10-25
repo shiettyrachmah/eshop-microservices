@@ -1,4 +1,6 @@
-﻿namespace Basket.API.Basket.StoreBasket
+﻿using Discount.Grpc.Protos;
+
+namespace Basket.API.Basket.StoreBasket
 {
     /// <summary>
     /// CRUD :
@@ -26,13 +28,26 @@
             RuleFor(x => x.Cart.UserName).NotNull().WithMessage("Username is required");
         }
     }
-    public class StoreBasketHandler(IBasketRepository repository) : ICommandHandler<StoreBasketCommand, StoreBasketResult>
+    public class StoreBasketHandler(IBasketRepository repository, DiscountProtoService.DiscountProtoServiceClient discountProto) : ICommandHandler<StoreBasketCommand, StoreBasketResult>
     {
         public async Task<StoreBasketResult> Handle(StoreBasketCommand command, CancellationToken cancellationToken)
         {
-            ShoppingCart cart = command.Cart;
+            await DeductDiscount(command.Cart, cancellationToken);
+
+            // ShoppingCart cart = command.Cart;
             await repository.StoreBasket(command.Cart, cancellationToken);
             return new StoreBasketResult(command.Cart.UserName);
+        }
+
+        public async Task DeductDiscount(ShoppingCart cart, CancellationToken cancellationToken)
+        {
+            //cara menggunakan coupon di basket. coupon amount akan di apply di ssetiap item dari basket
+            foreach (var item in cart.Items)
+            {
+                var coupon = await discountProto.GetDiscountAsync(new GetDiscountRequest { ProductName = item.ProductName }, cancellationToken: cancellationToken);
+
+                item.Price -= coupon.Amount;
+            }
         }
     }
 }
