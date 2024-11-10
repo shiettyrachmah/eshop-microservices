@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-
-namespace Ordering.API
+﻿namespace Ordering.API
 {
     /// <summary>
     /// pengggunaan dependency injection classpada masing2 library karena:

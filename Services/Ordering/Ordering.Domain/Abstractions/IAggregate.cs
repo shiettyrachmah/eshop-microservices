@@ -1,4 +1,4 @@
-﻿namespace Ordering.API.Abstractions
+﻿namespace Ordering.Domain.Abstractions
 {
     // Class IAggregate adalah jenis entitas khusus yang dapat menangani peristiwa domain
 
